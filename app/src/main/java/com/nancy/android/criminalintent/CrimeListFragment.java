@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class CrimeListFragment extends ListFragment {
     private ArrayList<Crime> mCrimes;
     private static final String TAG = "CrimeListFragment";
+    private static final int RESULT_CRIME = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,16 @@ public class CrimeListFragment extends ListFragment {
         // Start CrimePagerActivity with this Crime
         Intent i = new Intent(getActivity(), CrimePagerActivity.class);
         i.putExtra(CrimeFragment.EXTRA_CRIME_ID, c.getId());    // inform activity the id of which Crime to show
-        startActivity(i);
+//        startActivity(i);
+        startActivityForResult(i, RESULT_CRIME);
+    }
+
+    // to 0
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RESULT_CRIME) {
+            // Handle result
+        }
     }
 
     // Important controller

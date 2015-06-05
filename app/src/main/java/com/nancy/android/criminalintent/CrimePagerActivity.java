@@ -27,11 +27,11 @@ public class CrimePagerActivity extends FragmentActivity {
         mCrimes = CrimeLab.get(this).getCrimes();
 
         FragmentManager fm = getSupportFragmentManager();
+        // set PagerAdapter
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
             @Override
             public Fragment getItem(int position) {
-                Crime crime = mCrimes.get(position);
-                return CrimeFragment.newInstance(crime.getId());
+                return CrimeFragment.newInstance(mCrimes.get(position).getId());
             }
 
             @Override
@@ -40,6 +40,7 @@ public class CrimePagerActivity extends FragmentActivity {
             }
         });
 
+        // to show correct Crime title
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) { }
 
@@ -47,16 +48,18 @@ public class CrimePagerActivity extends FragmentActivity {
 
             public void onPageSelected(int pos) {
                 Crime crime = mCrimes.get(pos);
-                if (null != crime.getTitle()) {
+                if (crime.getTitle() != null) {
                     setTitle(crime.getTitle());
                 }
             }
         });
 
-        UUID crimeId = (UUID)getIntent().getSerializableExtra(CrimeFragment.EXTRA_CRIME_ID);
+        // set index for ViewPager to show correct Crime
+        UUID crimeId = (UUID) getIntent().getSerializableExtra(CrimeFragment.EXTRA_CRIME_ID);
         for (int i = 0; i < mCrimes.size(); ++i) {
             if (mCrimes.get(i).getId().equals(crimeId)) {
-                mViewPager.setCurrentItem(i);   // to show the Crime which was clicked
+                mViewPager.setCurrentItem(i);
+                break;
             }
         }
     }
