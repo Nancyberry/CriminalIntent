@@ -17,6 +17,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -27,6 +29,9 @@ public class CrimeFragment extends Fragment {
     public static final String EXTRA_CRIME_ID = "com.nancy.android.criminalintent.crime_id";
     private static final String DIALOG_DATE = "date";
     private static final int REQUEST_DATE = 0;
+
+    // nancy added date style
+    private static final String SIMPLE_STYLE = "simple";
 
     private Crime mCrime;
     private EditText mTitleField;
@@ -84,7 +89,10 @@ public class CrimeFragment extends Fragment {
 //        String formatedDate = df.format(date);
 //        mDateButton.setText(mCrime.getDate().toString());
 //        mDateButton.setText(formatedDate);
-        updateDate();
+
+//        updateDate();
+        updateDate(SIMPLE_STYLE);
+
 //        mDateButton.setEnabled(false);
 
         // add date dialog
@@ -124,11 +132,25 @@ public class CrimeFragment extends Fragment {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             // fresh model and view
             mCrime.setDate(date);
-            updateDate();
+//            updateDate();
+            updateDate(SIMPLE_STYLE);
         }
     }
 
     public void updateDate() {
         mDateButton.setText(mCrime.getDate().toString());
+    }
+
+    public void updateDate(String style) {
+        Date date = mCrime.getDate();
+        String formatedDate = date.toString();
+
+        if (style.equalsIgnoreCase(SIMPLE_STYLE)) {
+//            DateFormat df = DateFormat.getDateInstance();
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            formatedDate = df.format(date);
+        }
+
+        mDateButton.setText(formatedDate);
     }
 }
