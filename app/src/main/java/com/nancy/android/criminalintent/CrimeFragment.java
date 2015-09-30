@@ -41,6 +41,7 @@ public class CrimeFragment extends Fragment {
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
+    private Button mAddCrimeButton;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -124,10 +125,18 @@ public class CrimeFragment extends Fragment {
         mSolvedCheckBox = (CheckBox) v.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
+            //            @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 // Set the crime's solved property
                 mCrime.setSolved(isChecked);
+            }
+        });
+
+        mAddCrimeButton = (Button)v.findViewById(R.id.add_crime);
+        mAddCrimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavUtils.navigateUpFromSameTask(getActivity());
             }
         });
 
