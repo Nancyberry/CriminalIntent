@@ -1,6 +1,7 @@
 package com.nancy.android.criminalintent;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +31,27 @@ public class CrimeListFragment extends ListFragment {
     private boolean mSubtitleVisible;
     private static final String TAG = "CrimeListFragment";
     private static final int RESULT_CRIME = 1;
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        void onCrimeSelected(Crime crime);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallbacks = (Callbacks)activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    public void updateUI() {
+        ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,10 +152,11 @@ public class CrimeListFragment extends ListFragment {
 //        Intent i = new Intent(getActivity(), CrimeActivity.class);
 
         // Start CrimePagerActivity with this Crime
-        Intent i = new Intent(getActivity(), CrimePagerActivity.class);
-        i.putExtra(CrimeFragment.EXTRA_CRIME_ID, c.getId());    // inform activity the id of which Crime to show
+//        Intent i = new Intent(getActivity(), CrimePagerActivity.class);
+//        i.putExtra(CrimeFragment.EXTRA_CRIME_ID, c.getId());    // inform activity the id of which Crime to show
 //        startActivity(i);
-        startActivityForResult(i, RESULT_CRIME);
+//        startActivityForResult(i, RESULT_CRIME);
+        mCallbacks.onCrimeSelected(c);  // let activity deal with it
     }
 
     // to 0
@@ -163,9 +186,11 @@ public class CrimeListFragment extends ListFragment {
             case R.id.menu_item_new_crime:
                 Crime crime = new Crime();
                 CrimeLab.get(getActivity()).getCrimes().add(crime);
-                Intent i = new Intent(getActivity(), CrimePagerActivity.class);
-                i.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getId());
-                startActivityForResult(i, 0);
+//                Intent i = new Intent(getActivity(), CrimePagerActivity.class);
+//                i.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getId());
+//                startActivityForResult(i, 0);
+                updateUI();
+                mCallbacks.onCrimeSelected(crime);
                 return true;
             case R.id.menu_item_show_subtitle:
                 if (getActivity().getActionBar().getSubtitle() == null) {
